@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "107806212875",
+    "project_id": "parkingolatest",
+    "storage_bucket": "parkingolatest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107806212875:android:f0018f6269cbcf6c1a980e",
+        "android_client_info": {
+          "package_name": "com.example.new_parkingo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOfcMvDjKY9VNkgXsE9Jt116wAZqEq-MQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

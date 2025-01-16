@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         body: BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        print("current State: $state");
+        debugPrint("current State: $state");
         if (state is AuthAuthenticated) {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("SignUp success")));

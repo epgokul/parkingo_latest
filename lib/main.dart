@@ -62,7 +62,7 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        print("current state: $state");
+        debugPrint("current state: $state");
         if (state is AuthInitial || state is AuthLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is AuthAuthenticated) {

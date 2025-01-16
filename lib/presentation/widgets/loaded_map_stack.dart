@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:new_parkingo/presentation/screens/search_screen.dart';
 import 'package:new_parkingo/presentation/widgets/google_map_view.dart';
-import 'package:new_parkingo/presentation/widgets/textfield.dart';
 
 class LoadedMapStack extends StatelessWidget {
   LoadedMapStack({super.key, required this.latitude, required this.longitude});
@@ -71,7 +71,7 @@ class LoadedMapStack extends StatelessWidget {
                     width: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      color: Colors.white,
+                      color: Theme.of(context).canvasColor,
                     ),
                     child: const Icon(Icons.menu),
                   ),
@@ -82,26 +82,33 @@ class LoadedMapStack extends StatelessWidget {
                 const SizedBox(
                   width: 20,
                 ),
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: 30,
-                    right: 30,
-                    top: 5,
-                    bottom: 5,
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                  height: 50,
-                  width: size.width - 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: CustomTextfield(
-                    obscureText: false,
-                    normalBorderColor: Colors.transparent,
-                    focusedBorderColor: Colors.transparent,
-                    controller: placeSearchController,
-                    keyboardType: TextInputType.text,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchScreen(),
+                        ));
+                  },
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                      top: 5,
+                      bottom: 5,
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    height: 50,
+                    width: size.width - 120,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Theme.of(context).canvasColor),
+                    child: const Text(
+                      "Search",
+                      style: TextStyle(
+                          color: Colors.grey, letterSpacing: 4, fontSize: 18),
+                    ),
                   ),
                 ),
               ],

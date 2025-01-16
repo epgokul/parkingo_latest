@@ -101,7 +101,7 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   clipBehavior: Clip.hardEdge,
                   child: Image.network(
-                    profilePicUrl!,
+                    profilePicUrl ?? "",
                     fit: BoxFit.fill,
                   ),
                 ),

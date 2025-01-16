@@ -8,7 +8,8 @@ class CustomTextfield extends StatelessWidget {
       required this.focusedBorderColor,
       required this.controller,
       required this.keyboardType,
-      this.hintText});
+      this.hintText,
+      this.onTap});
 
   final bool obscureText;
   final Color normalBorderColor;
@@ -16,6 +17,7 @@ class CustomTextfield extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
   final String? hintText;
+  final GestureTapCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class CustomTextfield extends StatelessWidget {
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
       },
+      onTap: onTap,
       cursorColor: Colors.black,
       maxLength: null,
       cursorHeight: 18,

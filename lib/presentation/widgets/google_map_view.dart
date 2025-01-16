@@ -35,6 +35,8 @@ class _GoogleMapViewState extends State<GoogleMapView> {
             ? 'dark'
             : 'light';
 
+    debugPrint("Theme: $themeMode");
+
     String stylePath = themeMode == 'dark'
         ? 'assets/map_style/map_style_dark.json'
         : 'assets/map_style/map_style_light.json';
@@ -61,13 +63,13 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           mapToolbarEnabled: false,
           myLocationEnabled: true,
           myLocationButtonEnabled: true,
-          trafficEnabled: false,
+          trafficEnabled: true,
           buildingsEnabled: false,
           indoorViewEnabled: false,
-          style: snapshot.data, // Apply the loaded map style here
+          style: snapshot.data,
           initialCameraPosition: CameraPosition(
             target: LatLng(widget.latitude, widget.longitude),
-            zoom: 20.0,
+            zoom: 16.0,
           ),
         );
       },

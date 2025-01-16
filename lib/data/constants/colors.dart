@@ -15,7 +15,7 @@ class ParkingoColors {
 
   //container background colors
   static const Color containerLight = Color.fromARGB(255, 238, 238, 238);
-  static const Color containerDark = Color.fromARGB(255, 28, 28, 28);
+  static const Color containerDark = Color.fromARGB(255, 64, 64, 64);
 
   //scaffold colors
   static const Color scaffoldLight = Color.fromARGB(255, 238, 237, 237);
@@ -26,8 +26,8 @@ class ParkingoColors {
   static const Color appbarDark = Color.fromARGB(255, 0, 0, 0);
 
   //icon colors
-  static const Color iconLight = Color.fromARGB(255, 207, 204, 204);
-  static const Color iconDark = Color.fromARGB(255, 20, 20, 20);
+  static const Color iconDark = Color.fromARGB(255, 207, 204, 204);
+  static const Color iconLight = Color.fromARGB(255, 20, 20, 20);
 
   //bottomNavigation bar
   static const Color bnb = Color.fromARGB(255, 0, 0, 0);

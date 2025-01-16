@@ -17,7 +17,7 @@ class HomePageLayout extends StatelessWidget {
       bottomNavigationBar: BlocBuilder<NavigationBloc, NavigationState>(
         builder: (context, state) {
           return BottomNavigationBar(
-            selectedLabelStyle: const TextStyle(color: Colors.amber),
+            showSelectedLabels: false,
             iconSize: 30,
             landscapeLayout: BottomNavigationBarLandscapeLayout.spread,
             currentIndex: state.selectedIndex,
@@ -28,21 +28,25 @@ class HomePageLayout extends StatelessWidget {
                 activeIcon: Icon(
                   Icons.home,
                   color: Colors.amber,
+                  size: 40,
                 ),
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: "Profile",
-                  activeIcon: Icon(
-                    Icons.person,
-                    color: Colors.amber,
-                  )),
+                icon: Icon(Icons.person),
+                label: "Profile",
+                activeIcon: Icon(
+                  Icons.person,
+                  color: Colors.amber,
+                  size: 40,
+                ),
+              ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.notifications),
                   label: "Notifications",
                   activeIcon: Icon(
                     Icons.notifications,
                     color: Colors.amber,
+                    size: 40,
                   )),
             ],
             onTap: (value) {

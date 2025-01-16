@@ -162,7 +162,7 @@ class _RemoveUserPageState extends State<RemoveUserPage> {
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
     } catch (e) {
-      print("Error fetching users: $e");
+      debugPrint("Error fetching users: $e");
       return [];
     }
   }

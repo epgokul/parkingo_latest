@@ -25,6 +25,7 @@ class CustomTextfield extends StatelessWidget {
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
       },
+      style: TextStyle(color: Theme.of(context).textTheme.displayLarge?.color),
       onTap: onTap,
       cursorColor: Colors.black,
       maxLength: null,

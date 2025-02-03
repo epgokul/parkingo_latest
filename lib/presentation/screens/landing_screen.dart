@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:new_parkingo/presentation/screens/login_page.dart';
-import 'package:new_parkingo/presentation/screens/signup_page.dart';
+import 'package:new_parkingo/presentation/screens/login/login_page.dart';
+import 'package:new_parkingo/presentation/screens/login/signup_page.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/button.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/transparent_button.dart';
 

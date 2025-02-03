@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:new_parkingo/domain/blocs/land_decision/land_decision_bloc.dart';
+import 'package:new_parkingo/domain/blocs/land_decision/land_decision_state.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/button.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
 
@@ -48,6 +51,7 @@ Future<void> openLocationViewer(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: GoogleMap(
+              indoorViewEnabled: true,
               initialCameraPosition: CameraPosition(
                 target: LatLng(latitude, longitude),
                 zoom: 20, // Adjust zoom level as needed
@@ -77,139 +81,185 @@ class _LandRequestPageState extends State<LandRequestPage> {
           style: TextStyle(fontWeight: FontWeight.w400),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: fetchLandRequestDetailsWithDelay(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomCircularProgress(),
-                        SizedBox(height: 20),
-                        Text(
-                          "Fetching Land details",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      "Error: ${snapshot.error}",
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w400),
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No land requests found.",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-                    ),
-                  );
-                }
+      body: BlocListener<LandDecisionBloc, LandDecisionState>(
+        listener: (BuildContext context, LandDecisionState state) {
+          if (state is LandDecisionAccepted) {
+            fetchLandRequestDetailsWithDelay();
+          } else if (state is LandDecisionRejected) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Land Request Rejected!")));
+          }
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: fetchLandRequestDetailsWithDelay(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomCircularProgress(),
+                          SizedBox(height: 20),
+                          Text(
+                            "Fetching Land details",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Error: ${snapshot.error}",
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w400),
+                      ),
+                    );
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No land requests found.",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w400),
+                      ),
+                    );
+                  }
 
-                final landData = snapshot.data!;
-                return ListView.builder(
-                  itemCount: landData.length,
-                  padding: const EdgeInsets.all(10.0), // Added padding
-                  // ignore: body_might_complete_normally_nullable
-                  itemBuilder: (context, index) {
-                    var land = landData[index];
-                    var name = land['owner_name'] ?? "Unknown";
-                    var phone = land['contact_number'] ?? "N/A";
-                    var userId = land['addedBy'] ?? "N/A";
-                    double landLatitude = land['latitude'];
-                    double landLongitude = land['longitude'];
-                    bool isAccepted = land['approved'];
+                  final landData = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: landData.length,
+                    padding: const EdgeInsets.all(10.0), // Added padding
+                    // ignore: body_might_complete_normally_nullable
+                    itemBuilder: (context, index) {
+                      var land = landData[index];
+                      var name = land['owner_name'] ?? "Unknown";
+                      var phone = land['contact_number'] ?? "N/A";
+                      var description = land['description'] ?? "N/A";
+                      double landLatitude = land['latitude'];
+                      double landLongitude = land['longitude'];
+                      bool isAccepted = land['approved'];
+                      Map<String, dynamic> pricing = land['price'];
+                      var autoPrice = pricing['auto'];
+                      var carPrice = pricing['car'];
+                      var bicyclePrice = pricing['bicycle'];
+                      var bikePrice = pricing['bike'];
+                      var heavyPrice = pricing['heavy'];
 
-                    if (!isAccepted) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10.0), // Spacing
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: index % 2 != 0
-                              ? Colors.amber[200]
-                              : Colors.amber[50],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "Phone Number: $phone",
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w300),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "User ID: $userId",
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w300),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: CustomButton(
-                                  text: "View Land Marker",
-                                  onTap: () {
-                                    openLocationViewer(
-                                        context: context,
-                                        latitude: landLatitude,
-                                        longitude: landLongitude);
-                                  },
-                                  color: Colors.amber,
-                                  textColor: Colors.white,
-                                  width: MediaQuery.sizeOf(context).width),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomButton(
-                                    width: 100,
-                                    text: "Decline",
-                                    onTap: () {},
-                                    color: Colors.red,
-                                    textColor: Colors.white),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                CustomButton(
-                                    width: 100,
-                                    text: "Accept",
-                                    onTap: () {},
-                                    color: Colors.green,
-                                    textColor: Colors.white),
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                );
-              },
+                      if (!isAccepted) {
+                        return Container(
+                          margin:
+                              const EdgeInsets.only(bottom: 10.0), // Spacing
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: index % 2 != 0
+                                ? Colors.amber[200]
+                                : Colors.amber[50],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "$name's Land",
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                "Phone Number: $phone",
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                '$description',
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Auto rickshaw: ${autoPrice}rs",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "Car: ${carPrice}rs",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "Bike: ${bikePrice}rs",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "Heavy vehicle: ${heavyPrice}rs",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "Bicycle: ${bicyclePrice}rs",
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: CustomButton(
+                                    text: "View Land Marker",
+                                    onTap: () {
+                                      openLocationViewer(
+                                          context: context,
+                                          latitude: landLatitude,
+                                          longitude: landLongitude);
+                                    },
+                                    color: Colors.amber,
+                                    textColor: Colors.white,
+                                    width: MediaQuery.sizeOf(context).width),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  CustomButton(
+                                      width: 100,
+                                      text: "Decline",
+                                      onTap: () {},
+                                      color: Colors.red,
+                                      textColor: Colors.white),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  CustomButton(
+                                      width: 100,
+                                      text: "Accept",
+                                      onTap: () {},
+                                      color: Colors.green,
+                                      textColor: Colors.white),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

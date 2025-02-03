@@ -5,7 +5,7 @@ import 'package:new_parkingo/domain/blocs/auth/auth_event.dart';
 import 'package:new_parkingo/domain/blocs/auth/auth_state.dart';
 import 'package:new_parkingo/presentation/screens/Admin/admin_home_page.dart';
 import 'package:new_parkingo/presentation/screens/home_page.dart';
-import 'package:new_parkingo/presentation/screens/signup_page.dart';
+import 'package:new_parkingo/presentation/screens/login/signup_page.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/button.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/button_with_icon.dart';
 import 'package:new_parkingo/presentation/widgets/textfield.dart';

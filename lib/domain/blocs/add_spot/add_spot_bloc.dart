@@ -19,7 +19,7 @@ class AddSpotBloc extends Bloc<AddSpotEvent, AddSpotState> {
       AddSpotSuccess event, Emitter emit) async {
     emit(AddSpotInitial());
     try {
-      await _firestore.collection('markers').add({
+      await _firestore.collection('markers').doc(event.userId).set({
         'latitude': event.latitude,
         'longitude': event.longitude,
         'description': event.description,

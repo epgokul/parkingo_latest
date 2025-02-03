@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_parkingo/presentation/widgets/buttons/button.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
 
 class RemoveUserPage extends StatefulWidget {
@@ -76,65 +75,45 @@ class _RemoveUserPageState extends State<RemoveUserPage> {
                         var user = users[index];
                         var name = user["displayName"].toString();
                         var email = user["email"].toString();
-                        return Column(
-                          children: [
+                        return ExpansionTile(
+                          backgroundColor: index % 2 != 0
+                              ? Colors.amber[200]
+                              : Colors.amber[50],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          title: Text(
+                            name,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          trailing: Icon(
+                            isExpanded[index]
+                                ? Icons.expand_less
+                                : Icons.expand_more,
+                          ),
+                          collapsedBackgroundColor: index % 2 != 0
+                              ? Colors.amber[200]
+                              : Colors.amber[50],
+                          collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          onExpansionChanged: (bool value) {
+                            setState(() {
+                              isExpanded[index] = value;
+                            });
+                          },
+                          children: <Widget>[
                             ListTile(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              tileColor: index % 2 != 0
-                                  ? Colors.amber[200]
-                                  : Colors.amber[50],
-                              title: Text(name),
-                              trailing: Icon(
-                                isExpanded[index]
-                                    ? Icons.expand_less
-                                    : Icons.expand_more,
+                              subtitle: Text(
+                                email,
+                                style: const TextStyle(color: Colors.black87),
                               ),
-                              onTap: () {
-                                setState(() {
-                                  isExpanded[index] = !isExpanded[index];
-                                });
-                              },
-                            ),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                              trailing: IconButton(
+                                icon: const Icon(
+                                  Icons.delete_rounded,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {},
                               ),
-                              curve: Curves.easeInOut,
-                              height: isExpanded[index] ? 150 : 0,
-                              width: MediaQuery.sizeOf(context).width,
-                              padding: const EdgeInsets.all(16.0),
-                              child: isExpanded[index]
-                                  ? Container(
-                                      decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20)),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Email: $email"),
-                                          const SizedBox(height: 20),
-                                          Align(
-                                            alignment: Alignment.center,
-                                            child: CustomButton(
-                                              width: 300,
-                                              text: "Remove $name",
-                                              onTap: () {},
-                                              color: Colors.red,
-                                              textColor: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : null,
                             ),
-                            const SizedBox(height: 10),
                           ],
                         );
                       },

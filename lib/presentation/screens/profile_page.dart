@@ -82,7 +82,33 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
         actions: [
           IconButton(
             onPressed: () {
-              context.read<AuthBloc>().add(SignOutEvent());
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("You are attempting to Logout!"),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color),
+                        )),
+                    ElevatedButton(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(SignOutEvent());
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "Logout",
+                          style: TextStyle(color: Colors.red),
+                        )),
+                  ],
+                ),
+              );
             },
             icon: const Icon(Icons.logout_rounded),
             color: Colors.redAccent,

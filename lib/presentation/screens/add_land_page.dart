@@ -244,14 +244,20 @@ class _AddLandPageState extends State<AddLandPage> {
                   const SizedBox(
                     height: 10,
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Text(selectedLocation == null
                       ? "No location selected: "
                       : selectedLocation.toString()),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Align(
                     alignment: Alignment.center,
                     child: CustomButton(
                         width: 300,
-                        text: "text",
+                        text: "Send Request",
                         onTap: () {
                           updatePrices();
                           if (validateFields()) {

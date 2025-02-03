@@ -20,7 +20,32 @@ class _AdminHomePageState extends State<AdminHomePage> {
       floatingActionButton: FloatingActionButton(
         tooltip: "Logout",
         onPressed: () {
-          context.read<AuthBloc>().add(SignOutEvent());
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("You are attempting to Logout!"),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall?.color),
+                    )),
+                ElevatedButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(SignOutEvent());
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      "Logout",
+                      style: TextStyle(color: Colors.red),
+                    )),
+              ],
+            ),
+          );
         },
         backgroundColor: Colors.white,
         child: const Icon(

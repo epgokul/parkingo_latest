@@ -19,6 +19,8 @@ class AddSpotSuccess extends AddSpotEvent {
   final double latitude;
   final double longitude;
   final String description;
+  final String place;
+  final String district;
   final String ownerName;
   final String contactNumber;
   final Map<String, String> price;
@@ -29,6 +31,8 @@ class AddSpotSuccess extends AddSpotEvent {
     required this.longitude,
     required this.description,
     required this.price,
+    required this.place,
+    required this.district,
     required this.contactNumber,
     required this.ownerName,
     required this.userId,

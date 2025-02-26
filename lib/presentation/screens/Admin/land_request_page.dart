@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:new_parkingo/domain/blocs/land_decision/land_decision_bloc.dart';
+import 'package:new_parkingo/domain/blocs/land_decision/land_decision_event.dart';
 import 'package:new_parkingo/domain/blocs/land_decision/land_decision_state.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/button.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
@@ -83,7 +84,9 @@ class _LandRequestPageState extends State<LandRequestPage> {
       ),
       body: BlocListener<LandDecisionBloc, LandDecisionState>(
         listener: (BuildContext context, LandDecisionState state) {
-          if (state is LandDecisionAccepted) {
+          if (state is LandDecisionLoading) {
+            const Center(child: CustomCircularProgress());
+          } else if (state is LandDecisionAccepted) {
             fetchLandRequestDetailsWithDelay();
           } else if (state is LandDecisionRejected) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -129,7 +132,21 @@ class _LandRequestPageState extends State<LandRequestPage> {
                     );
                   }
 
-                  final landData = snapshot.data!;
+                  final allLandData = snapshot.data!;
+                  List<Map<String, dynamic>> landData = allLandData
+                      .where((land) => land['approved'] == false)
+                      .toList();
+
+                  if (landData.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No approved land requests found.",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w400),
+                      ),
+                    );
+                  }
+
                   return ListView.builder(
                     itemCount: landData.length,
                     padding: const EdgeInsets.all(10.0), // Added padding
@@ -148,6 +165,7 @@ class _LandRequestPageState extends State<LandRequestPage> {
                       var bicyclePrice = pricing['bicycle'];
                       var bikePrice = pricing['bike'];
                       var heavyPrice = pricing['heavy'];
+                      var userId = land['addedBy'];
 
                       if (!isAccepted) {
                         return Container(
@@ -235,7 +253,35 @@ class _LandRequestPageState extends State<LandRequestPage> {
                                   CustomButton(
                                       width: 100,
                                       text: "Decline",
-                                      onTap: () {},
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                                "Reject the Land request made by $name?"),
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.green),
+                                                  )),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    "Reject",
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  ))
+                                            ],
+                                          ),
+                                        );
+                                      },
                                       color: Colors.red,
                                       textColor: Colors.white),
                                   const SizedBox(
@@ -244,7 +290,40 @@ class _LandRequestPageState extends State<LandRequestPage> {
                                   CustomButton(
                                       width: 100,
                                       text: "Accept",
-                                      onTap: () {},
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                                "Accept the Land request made by $name?"),
+                                            actions: [
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.red),
+                                                  )),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    context
+                                                        .read<
+                                                            LandDecisionBloc>()
+                                                        .add(AcceptLandRequest(
+                                                            userId));
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text(
+                                                    "Accept",
+                                                    style: TextStyle(
+                                                        color: Colors.green),
+                                                  ))
+                                            ],
+                                          ),
+                                        );
+                                      },
                                       color: Colors.green,
                                       textColor: Colors.white),
                                 ],

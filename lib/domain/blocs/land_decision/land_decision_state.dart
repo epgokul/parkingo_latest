@@ -2,6 +2,8 @@ abstract class LandDecisionState {}
 
 class LandDecisionInitial extends LandDecisionState {}
 
+class LandDecisionLoading extends LandDecisionState {}
+
 class LandDecisionAccepted extends LandDecisionState {}
 
 class LandDecisionRejected extends LandDecisionState {}

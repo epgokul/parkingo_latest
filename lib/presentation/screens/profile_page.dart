@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +9,7 @@ import 'package:new_parkingo/domain/blocs/auth/auth_event.dart';
 import 'package:new_parkingo/domain/blocs/auth/auth_state.dart';
 import 'package:new_parkingo/domain/entities/user_entity.dart';
 import 'package:new_parkingo/presentation/screens/add_land_page.dart';
+import 'package:new_parkingo/presentation/screens/land_details.dart';
 import 'package:new_parkingo/presentation/widgets/buttons/button.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
 import 'package:new_parkingo/presentation/widgets/user_field.dart';
@@ -53,6 +55,19 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
   void initState() {
     super.initState();
     profilePicUrl = widget.user.profilePictureUrl;
+  }
+
+  Future<Map<String, dynamic>?> fetchMarkerData() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('markers')
+        .doc(widget.user.uid) // Access the user's collection
+        .get();
+
+    if (snapshot.data() != null) {
+      return snapshot.data();
+    } else {
+      return null;
+    }
   }
 
   Future<void> _pickAndUploadImage() async {
@@ -115,64 +130,83 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              children: [
-                Container(
-                  height: 200,
-                  width: 200,
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  clipBehavior: Clip.hardEdge,
-                  child: Image.network(
-                    profilePicUrl ?? "",
-                    fit: BoxFit.fill,
+      body: Padding(
+        padding: const EdgeInsets.only(left: 5, right: 5),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 200,
+                    width: 200,
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.network(
+                      profilePicUrl ?? "",
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: IconButton(
-                    iconSize: 35,
-                    onPressed: _pickAndUploadImage,
-                    icon: const Icon(Icons.add_a_photo),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 70),
-            UserField(
-              title: widget.user.displayName,
-              icon: Icons.person,
-              iconsize: 30,
-              titlesize: 20,
-            ),
-            const SizedBox(height: 30),
-            UserField(
-              title: widget.user.email,
-              icon: Icons.email_rounded,
-              iconsize: 30,
-              titlesize: 20,
-            ),
-            const SizedBox(height: 30),
-            CustomButton(
-                text: "Add Parking Spot",
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: IconButton(
+                      iconSize: 35,
+                      onPressed: _pickAndUploadImage,
+                      icon: const Icon(Icons.add_a_photo),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 70),
+              UserField(
+                title: widget.user.displayName,
+                icon: Icons.person,
+                iconsize: 30,
+                titlesize: 20,
+              ),
+              const SizedBox(height: 30),
+              UserField(
+                title: widget.user.email,
+                icon: Icons.email_rounded,
+                iconsize: 30,
+                titlesize: 20,
+              ),
+              const SizedBox(height: 30),
+              UserField(
+                title: "Your Lands",
+                icon: Icons.local_parking_rounded,
+                iconsize: 30,
+                titlesize: 20,
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddLandPage(
-                                user: widget.user,
-                              )));
+                        builder: (context) => LandDetails(
+                          user: widget.user,
+                        ),
+                      ));
                 },
-                color: Colors.amber,
-                textColor: Colors.black,
-                width: 300),
-            const SizedBox(height: 30),
-            Container()
-          ],
+              ),
+              const SizedBox(height: 30),
+              CustomButton(
+                  text: "Add Parking Spot",
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddLandPage(
+                                  user: widget.user,
+                                )));
+                  },
+                  color: Colors.amber,
+                  textColor: Colors.black,
+                  width: 300),
+              const SizedBox(height: 30),
+              Container()
+            ],
+          ),
         ),
       ),
     );

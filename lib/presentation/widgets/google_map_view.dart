@@ -60,7 +60,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
         return GoogleMap(
           zoomControlsEnabled: false,
           compassEnabled: false,
-          mapToolbarEnabled: false,
+          mapToolbarEnabled: true,
           myLocationEnabled: true,
           myLocationButtonEnabled: true,
           trafficEnabled: true,

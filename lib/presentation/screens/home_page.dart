@@ -28,47 +28,60 @@ class HomePage extends StatelessWidget {
           ),
         ],
         child: MultiBlocListener(
-          listeners: [
-            BlocListener<AuthBloc, AuthState>(
-              listener: (context, state) {
-                // Handle AuthBloc changes if needed
-              },
-            ),
-            BlocListener<LocationPermissionBloc, LocationPermissionState>(
-              listener: (context, state) {
-                if (state is PermissionDenied) {
-                  // Show Android permission popup
-                  context
-                      .read<LocationPermissionBloc>()
-                      .add(RequestPermission());
-                } else if (state is PermissionGranted) {
-                  context.read<MapBloc>().add(LoadMap());
-                } else if (state is PermissionDeniedForever) {
-                  // Suggest the user open settings to enable permission
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            'Please enable location permission from settings')),
+            listeners: [
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  // Handle AuthBloc changes if needed
+                },
+              ),
+              BlocListener<LocationPermissionBloc, LocationPermissionState>(
+                listener: (context, state) {
+                  if (state is PermissionDenied) {
+                    // Show Android permission popup
+                    context
+                        .read<LocationPermissionBloc>()
+                        .add(RequestPermission());
+                  } else if (state is PermissionGranted) {
+                    context.read<MapBloc>().add(LoadMap());
+                  } else if (state is PermissionDeniedForever) {
+                    // Suggest the user open settings to enable permission
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text(
+                              'Please enable location permission from settings')),
+                    );
+                  }
+                },
+              )
+            ],
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, authstate) {
+                if (authstate is AuthAuthenticated) {
+                  final String userId = authstate.user.uid;
+                  return BlocBuilder<MapBloc, MapState>(
+                    builder: (context, state) {
+                      if (state is MapLoading) {
+                        return const Center(child: CustomCircularProgress());
+                      } else if (state is MapLoaded) {
+                        return HomePageLayout(
+                          latitude: state.latitude,
+                          longitude: state.longitude,
+                          userId: userId,
+                        );
+                      } else if (state is MapError) {
+                        return Center(child: Text('Error: ${state.message}'));
+                      } else {
+                        return const Center(child: Text('Loading Map...'));
+                      }
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: Text("User not Authenticated"),
                   );
                 }
               },
-            )
-          ],
-          child: BlocBuilder<MapBloc, MapState>(
-            builder: (context, state) {
-              if (state is MapLoading) {
-                return const Center(child: CustomCircularProgress());
-              } else if (state is MapLoaded) {
-                return HomePageLayout(
-                    latitude: state.latitude, longitude: state.longitude);
-              } else if (state is MapError) {
-                return Center(child: Text('Error: ${state.message}'));
-              } else {
-                return const Center(child: Text('Loading Map...'));
-              }
-            },
-          ),
-        ),
+            )),
       ),
     );
   }

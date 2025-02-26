@@ -13,6 +13,7 @@ class LandDecisionBloc extends Bloc<LandDecisionEvent, LandDecisionState> {
 
   FutureOr<void> _onAcceptLandRequest(
       AcceptLandRequest event, Emitter<LandDecisionState> emit) {
+    emit(LandDecisionLoading());
     try {
       _firebaseFirestore
           .collection('markers')

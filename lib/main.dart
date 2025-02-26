@@ -6,6 +6,7 @@ import 'package:new_parkingo/domain/blocs/add_spot/add_spot_bloc.dart';
 import 'package:new_parkingo/domain/blocs/auth/auth_bloc.dart';
 import 'package:new_parkingo/domain/blocs/auth/auth_event.dart';
 import 'package:new_parkingo/domain/blocs/auth/auth_state.dart';
+import 'package:new_parkingo/domain/blocs/land_decision/land_decision_bloc.dart';
 import 'package:new_parkingo/domain/blocs/location_permission/location_permission_bloc.dart';
 import 'package:new_parkingo/domain/blocs/map/map_bloc.dart';
 import 'package:new_parkingo/domain/blocs/navigation/navigation_bloc.dart';
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<AddSpotBloc>(
             create: (context) => AddSpotBloc(),
+          ),
+          BlocProvider<LandDecisionBloc>(
+            create: (context) => LandDecisionBloc(),
           )
         ],
         child: MaterialApp(

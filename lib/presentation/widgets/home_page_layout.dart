@@ -7,9 +7,13 @@ import 'package:new_parkingo/presentation/widgets/loaded_map_stack.dart';
 
 class HomePageLayout extends StatelessWidget {
   const HomePageLayout(
-      {super.key, required this.latitude, required this.longitude});
+      {super.key,
+      required this.latitude,
+      required this.longitude,
+      required this.userId});
   final double latitude;
   final double longitude;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {

@@ -23,6 +23,8 @@ class AddSpotBloc extends Bloc<AddSpotEvent, AddSpotState> {
         'latitude': event.latitude,
         'longitude': event.longitude,
         'description': event.description,
+        'place': event.place,
+        'district': event.district,
         'price': event.price,
         'owner_name': event.ownerName,
         'contact_number': event.contactNumber,

@@ -14,6 +14,7 @@ import 'package:new_parkingo/presentation/screens/Admin/admin_home_page.dart';
 import 'package:new_parkingo/presentation/screens/home_page.dart';
 import 'package:new_parkingo/presentation/screens/onboarding_page.dart';
 import 'package:new_parkingo/presentation/theme/theme.dart';
+import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +69,7 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, state) {
         debugPrint("current state: $state");
         if (state is AuthInitial || state is AuthLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CustomCircularProgress());
         } else if (state is AuthAuthenticated) {
           return const HomePage();
         } else if (state is AuthAuthenticatedAdmin) {

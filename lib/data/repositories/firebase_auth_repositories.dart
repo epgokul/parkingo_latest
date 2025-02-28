@@ -17,10 +17,22 @@ class FirebaseAuthRepositories {
       throw Exception("User not found");
     }
 
+    // Fetch profile_pic_url from Firestore
+    String profilePictureUrl = "";
+    DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await _firebaseFirestore.collection('users').doc(user.uid).get();
+
+    if (snapshot.exists && snapshot.data() != null) {
+      profilePictureUrl = snapshot.data()?['profile_pic_url'] ?? "";
+      print("inside signIn profile pic url: $profilePictureUrl");
+    }
+
     return UserEntity(
-        uid: user.uid,
-        email: user.email ?? 'No email provided',
-        displayName: user.displayName ?? 'No display name');
+      uid: user.uid,
+      email: user.email ?? 'No email provided',
+      displayName: user.displayName ?? 'No display name',
+      profilePictureUrl: profilePictureUrl,
+    );
   }
 
   Future<UserEntity?> signInwithGoogle() async {

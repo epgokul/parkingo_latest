@@ -54,6 +54,7 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
   @override
   void initState() {
     super.initState();
+    print("Profile pic URL:${widget.user.profilePictureUrl}");
     profilePicUrl = widget.user.profilePictureUrl;
   }
 
@@ -143,10 +144,18 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
                     width: 200,
                     decoration: const BoxDecoration(shape: BoxShape.circle),
                     clipBehavior: Clip.hardEdge,
-                    child: Image.network(
-                      profilePicUrl ?? "",
-                      fit: BoxFit.fill,
-                    ),
+                    child: profilePicUrl != null
+                        ? Image.network(
+                            profilePicUrl!,
+                            fit: BoxFit.fill,
+                            key:
+                                UniqueKey(), // Forces Flutter to reload the image
+                            cacheHeight: null, // Prevents caching issues
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error, color: Colors.red);
+                            },
+                          )
+                        : const Icon(Icons.person_2_outlined),
                   ),
                   Positioned(
                     bottom: 0,

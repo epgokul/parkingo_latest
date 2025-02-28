@@ -11,6 +11,7 @@ import 'package:new_parkingo/domain/blocs/auth/auth_state.dart';
 import 'package:new_parkingo/domain/entities/user_entity.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuthRepositories _firebaseAuthRepositories =
       FirebaseAuthRepositories();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -94,22 +95,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       UploadProfilePictureEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      // Step 1: Upload the selected image to Firebase Storage
+      // Step 1: Upload the image to Firebase Storage
       final ref = _firebaseStorage
           .ref()
           .child('profile_pictures/${event.userId}/profile_pic');
 
-      // Upload the image file and get the download URL
       final uploadTask = ref.putFile(event.imageFile);
       final snapshot = await uploadTask.whenComplete(() => {});
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      // Step 2: Update the user's profile photo in Firebase Auth
+
+      // Step 2: Update Firebase Auth profile photo
       await _firebaseAuth.currentUser?.updatePhotoURL(downloadUrl);
 
-      // Step 3: Emit the updated AuthAuthenticated state with the new UserEntity
+      // Step 3: Update Firestore user document with new profile URL
+      await _firebaseFirestore
+          .collection('user')
+          .doc(event.userId)
+          .update({'profile_pic_url': downloadUrl});
+
+      // Step 4: Update UserEntity and emit new Authenticated state
       final updatedUser = _firebaseAuth.currentUser;
       if (updatedUser != null) {
-        emit(AuthAuthenticated(UserEntity.fromFirebaseUser(updatedUser)));
+        emit(AuthAuthenticated(UserEntity(
+          uid: updatedUser.uid,
+          email: updatedUser.email ?? 'No email provided',
+          displayName: updatedUser.displayName ?? 'No display name',
+          profilePictureUrl: downloadUrl, // Update UserEntity with new URL
+        )));
       } else {
         emit(AuthError('Failed to update user profile.'));
       }
@@ -130,26 +142,3 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 }
-
-// Future<void> _onFetchAllUsers(
-//     FetchAllUsersEvent event, Emitter<AuthState> emit) async {
-//   try {
-//     emit(AuthLoading());
-
-//     // Reference the Firestore collection
-//     final ref = FirebaseFirestore.instance.collection('users');
-
-//     // Fetch all documents from the collection
-//     final querySnapshot = await ref.get();
-
-//     // Convert the documents to a list of maps
-//     final users = querySnapshot.docs
-//         .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
-//         .toList();
-
-//     emit(UsersFetched(users));
-    
-//   } catch (e) {
-//     emit(AuthError(e.toString()));
-//   }
-// }

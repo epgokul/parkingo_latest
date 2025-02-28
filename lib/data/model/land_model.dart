@@ -3,12 +3,16 @@ class LandModel {
   final bool approved;
   final String contactNumber;
   final String description;
+  final String district;
+  final String place;
   final double latitude;
   final double longitude;
   final String ownerName;
   final Price price;
   LandModel(
       {required this.addedBy,
+      required this.district,
+      required this.place,
       required this.approved,
       required this.contactNumber,
       required this.description,
@@ -26,7 +30,9 @@ class LandModel {
         latitude: land['latitude'],
         longitude: land['longitude'],
         ownerName: land['owner_name'],
-        price: Price.fromjson(land['price']));
+        price: Price.fromjson(land['price']),
+        district: land['district'],
+        place: land['place']);
   }
 }
 

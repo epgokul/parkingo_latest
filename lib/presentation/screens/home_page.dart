@@ -61,16 +61,20 @@ class HomePage extends StatelessWidget {
                   return BlocBuilder<MapBloc, MapState>(
                     builder: (context, state) {
                       if (state is MapLoading) {
+                        debugPrint("State is $state");
                         return const Center(child: CustomCircularProgress());
                       } else if (state is MapLoaded) {
+                        debugPrint("State is $state");
                         return HomePageLayout(
                           latitude: state.latitude,
                           longitude: state.longitude,
                           userId: userId,
                         );
                       } else if (state is MapError) {
+                        debugPrint("State is $state");
                         return Center(child: Text('Error: ${state.message}'));
                       } else {
+                        debugPrint("State is $state");
                         return const Center(child: Text('Loading Map...'));
                       }
                     },

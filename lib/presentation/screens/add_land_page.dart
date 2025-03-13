@@ -348,7 +348,7 @@ class _AddLandPageState extends State<AddLandPage> {
                                 const SnackBar(
                                     content: Text("Fill all fields properly")));
 
-                            print(dropdownValue);
+                            debugPrint(dropdownValue);
                           }
                         },
                         color: Colors.black,

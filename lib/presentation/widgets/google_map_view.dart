@@ -10,10 +10,12 @@ class GoogleMapView extends StatefulWidget {
     super.key,
     required this.latitude,
     required this.longitude,
+    this.marker,
   });
 
   final double latitude;
   final double longitude;
+  final Set<Marker>? marker;
 
   @override
   _GoogleMapViewState createState() => _GoogleMapViewState();
@@ -67,6 +69,7 @@ class _GoogleMapViewState extends State<GoogleMapView> {
           buildingsEnabled: false,
           indoorViewEnabled: false,
           style: snapshot.data,
+          markers: widget.marker ?? {},
           initialCameraPosition: CameraPosition(
             target: LatLng(widget.latitude, widget.longitude),
             zoom: 16.0,

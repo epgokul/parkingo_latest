@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_parkingo/data/constants/const.dart';
 import 'package:new_parkingo/data/repositories/firebase_auth_repositories.dart';
@@ -63,8 +64,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final user = await _firebaseAuthRepositories.signUp(
           event.displayName, event.email, event.password);
+
+      debugPrint("User signed up: ${user.email}"); // Debugging line
+
       emit(AuthAuthenticated(user));
-    } catch (e) {
+    } catch (e, stacktrace) {
+      debugPrint("SignUp Error: $e\n$stacktrace"); // Log the error
       emit(AuthError(e.toString()));
     }
   }

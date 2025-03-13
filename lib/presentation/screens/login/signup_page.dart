@@ -12,6 +12,8 @@ class SignupPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +100,7 @@ class SignupPage extends StatelessWidget {
                     obscureText: true,
                     normalBorderColor: Colors.white,
                     focusedBorderColor: Colors.black12,
-                    controller: passwordController,
+                    controller: confirmPasswordController,
                     keyboardType: TextInputType.visiblePassword,
                   ),
                   const SizedBox(height: 20),
@@ -109,12 +111,22 @@ class SignupPage extends StatelessWidget {
                       color: Colors.amber,
                       textColor: Colors.white,
                       onTap: () {
-                        var email = emailController.text;
-                        var password = passwordController.text;
-                        var displayName = userNameController.text;
-                        context
-                            .read<AuthBloc>()
-                            .add(SignUpEvent(email, password, displayName));
+                        if (passwordController.text ==
+                            confirmPasswordController.text) {
+                          var email = emailController.text;
+                          var password = passwordController.text;
+                          var displayName = userNameController.text;
+                          context
+                              .read<AuthBloc>()
+                              .add(SignUpEvent(email, password, displayName));
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  content: Text(
+                            "Passwords are not matching!",
+                            style: TextStyle(color: Colors.red),
+                          )));
+                        }
                       },
                     ),
                   ),

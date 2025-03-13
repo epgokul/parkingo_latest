@@ -54,7 +54,7 @@ class _ProfilePageAuthenticatedState extends State<ProfilePageAuthenticated> {
   @override
   void initState() {
     super.initState();
-    print("Profile pic URL:${widget.user.profilePictureUrl}");
+    debugPrint("Profile pic URL:${widget.user.profilePictureUrl}");
     profilePicUrl = widget.user.profilePictureUrl;
   }
 

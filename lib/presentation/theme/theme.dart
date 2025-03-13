@@ -7,12 +7,13 @@ class Parkingotheme {
   Parkingotheme._();
 
   static ThemeData lightTheme = ThemeData(
-      useMaterial3: true,
-      fontFamily: "Poppins",
-      brightness: Brightness.light,
-      canvasColor: ParkingoColors.containerLight,
-      textTheme: ParkingoTextTheme.textThemeLight,
-      primaryColor: ParkingoColors.primary);
+    useMaterial3: true,
+    fontFamily: "Poppins",
+    brightness: Brightness.light,
+    canvasColor: ParkingoColors.containerLight,
+    textTheme: ParkingoTextTheme.textThemeLight,
+    primaryColor: ParkingoColors.primary,
+  );
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,

@@ -9,6 +9,7 @@ import 'package:new_parkingo/domain/blocs/auth/auth_state.dart';
 import 'package:new_parkingo/domain/blocs/land_decision/land_decision_bloc.dart';
 import 'package:new_parkingo/domain/blocs/location_permission/location_permission_bloc.dart';
 import 'package:new_parkingo/domain/blocs/map/map_bloc.dart';
+import 'package:new_parkingo/domain/blocs/marker/marker_bloc.dart';
 import 'package:new_parkingo/domain/blocs/navigation/navigation_bloc.dart';
 import 'package:new_parkingo/presentation/screens/Admin/admin_home_page.dart';
 import 'package:new_parkingo/presentation/screens/home_page.dart';
@@ -48,7 +49,10 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<LandDecisionBloc>(
             create: (context) => LandDecisionBloc(),
-          )
+          ),
+          BlocProvider<MarkerBloc>(
+            create: (context) => MarkerBloc(),
+          ),
         ],
         child: MaterialApp(
           home: const AuthWrapper(),

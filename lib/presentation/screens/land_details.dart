@@ -50,7 +50,7 @@ class _LandDetailsState extends State<LandDetails> {
       );
     }
 
-    if (landModel == null || landModel!.ownerName.isEmpty) {
+    if (landModel == null || landModel?.approved == false) {
       return Scaffold(
         appBar: AppBar(),
         body: const Center(

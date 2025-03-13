@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:new_parkingo/domain/entities/user_entity.dart';
 
@@ -24,7 +25,7 @@ class FirebaseAuthRepositories {
 
     if (snapshot.exists && snapshot.data() != null) {
       profilePictureUrl = snapshot.data()?['profile_pic_url'] ?? "";
-      print("inside signIn profile pic url: $profilePictureUrl");
+      debugPrint("inside signIn profile pic url: $profilePictureUrl");
     }
 
     return UserEntity(

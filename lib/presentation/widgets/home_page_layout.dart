@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:new_parkingo/data/api/firebase_api.dart';
 import 'package:new_parkingo/domain/blocs/navigation/navigation_bloc.dart';
 import 'package:new_parkingo/presentation/screens/notification_screen.dart';
 import 'package:new_parkingo/presentation/screens/profile_page.dart';
 import 'package:new_parkingo/presentation/widgets/loaded_map_stack.dart';
 
-class HomePageLayout extends StatelessWidget {
+class HomePageLayout extends StatefulWidget {
   const HomePageLayout(
       {super.key,
       required this.latitude,
@@ -14,6 +16,33 @@ class HomePageLayout extends StatelessWidget {
   final double latitude;
   final double longitude;
   final String userId;
+
+  @override
+  State<HomePageLayout> createState() => _HomePageLayoutState();
+}
+
+class _HomePageLayoutState extends State<HomePageLayout> {
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFCM();
+  }
+
+  void _initializeFCM() async {
+    String? fcmToken = await FirebaseApi().initNotification();
+
+    debugPrint("FCM Token: $fcmToken");
+    try {
+      await _firebaseFirestore
+          .collection('tokens')
+          .doc(widget.userId)
+          .set({'token': fcmToken});
+    } catch (e) {
+      debugPrint("Error adding FCM Token to the firestore: ${e.toString()}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +93,17 @@ class HomePageLayout extends StatelessWidget {
           switch (state.selectedIndex) {
             case 0:
               return LoadedMapStack(
-                  latitude: latitude,
-                  longitude: longitude); // Show the Profile page for index 0
+                  latitude: widget.latitude,
+                  longitude:
+                      widget.longitude); // Show the Profile page for index 0
             case 1:
               return const ProfilePage(); //show the Profile page for index 1
             case 2:
               return const NotificationScreen(); // Show the Notifications page for index 2
             default:
               return LoadedMapStack(
-                  latitude: latitude, longitude: longitude); // Default case
+                  latitude: widget.latitude,
+                  longitude: widget.longitude); // Default case
           }
         },
       ),

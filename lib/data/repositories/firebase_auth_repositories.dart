@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive/hive.dart';
 import 'package:new_parkingo/domain/entities/user_entity.dart';
 
 class FirebaseAuthRepositories {
@@ -27,6 +28,11 @@ class FirebaseAuthRepositories {
       profilePictureUrl = snapshot.data()?['profile_pic_url'] ?? "";
       debugPrint("inside signIn profile pic url: $profilePictureUrl");
     }
+
+    // Store the image URL in Hive
+    var box = await Hive.openBox('userBox'); // Open a Hive box named 'userBox'
+    await box.put('profilePictureUrl', profilePictureUrl);
+    debugPrint("Profile pic URL stored in Hive: $profilePictureUrl");
 
     return UserEntity(
       uid: user.uid,

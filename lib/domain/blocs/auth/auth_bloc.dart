@@ -26,7 +26,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
     on<UploadProfilePictureEvent>(_onProfilePicUpload);
     on<RemoveUserEvent>(_onRemoveUser);
-    // on<FetchAllUsersEvent>(_onFetchAllUsers);
   }
   Future<void> _onSignIn(SignInEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
@@ -49,11 +48,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SignInWithGoogleEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      // print("inside Authbloc->signinwithgoogle");
       final user = await _firebaseAuthRepositories.signInwithGoogle();
-      // print("booyah");
       emit(AuthAuthenticated(user!));
-      // print("Fuck yeeah");
     } catch (e) {
       emit(AuthError(e.toString()));
     }

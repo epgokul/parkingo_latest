@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
 
 class GoogleMapView extends StatefulWidget {

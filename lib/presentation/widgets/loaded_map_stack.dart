@@ -5,6 +5,7 @@ import 'package:new_parkingo/domain/blocs/marker/marker_event.dart';
 import 'package:new_parkingo/domain/blocs/marker/marker_state.dart';
 import 'package:new_parkingo/presentation/screens/search_screen.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
+import 'package:new_parkingo/presentation/widgets/custom_drawer.dart';
 import 'package:new_parkingo/presentation/widgets/google_map_view.dart';
 
 class LoadedMapStack extends StatefulWidget {
@@ -38,44 +39,7 @@ class _LoadedMapStackState extends State<LoadedMapStack> {
       create: (context) => MarkerBloc()..add(LoadMarkersEvent(context)),
       child: Scaffold(
         key: _scaffoldKey, // Attach the key to the Scaffold
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                ),
-                child: Center(
-                  child: Text(
-                    "PARKINGO",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        letterSpacing: 15,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text('Home'),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Handle drawer item tap
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
-                onTap: () {
-                  Navigator.pop(context);
-                  // Handle drawer item tap
-                },
-              ),
-            ],
-          ),
-        ),
+        drawer: const CustomDrawer(),
         body: Stack(
           alignment: Alignment.center,
           children: [

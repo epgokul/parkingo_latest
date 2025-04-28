@@ -14,15 +14,19 @@ import 'package:new_parkingo/domain/blocs/navigation/navigation_bloc.dart';
 import 'package:new_parkingo/presentation/screens/Admin/admin_home_page.dart';
 import 'package:new_parkingo/presentation/screens/home_page.dart';
 import 'package:new_parkingo/presentation/screens/onboarding_page.dart';
-import 'package:new_parkingo/presentation/theme/theme.dart';
+import 'package:new_parkingo/presentation/theme/theme_provider.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
   await Hive.openBox('userBox');
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -56,9 +60,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           home: const AuthWrapper(),
-          theme: Parkingotheme.lightTheme,
-          darkTheme: Parkingotheme.darkTheme,
-          themeMode: ThemeMode.system,
+          theme: Provider.of<ThemeProvider>(context).themeData,
           debugShowCheckedModeBanner: false,
         ));
   }

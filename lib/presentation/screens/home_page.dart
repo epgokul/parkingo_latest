@@ -11,9 +11,14 @@ import 'package:new_parkingo/domain/blocs/map/map_state.dart';
 import 'package:new_parkingo/presentation/widgets/custom_circular_progress.dart';
 import 'package:new_parkingo/presentation/widgets/home_page_layout.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +48,7 @@ class HomePage extends StatelessWidget {
                         .add(RequestPermission());
                   } else if (state is PermissionGranted) {
                     context.read<MapBloc>().add(LoadMap());
+                    Future.microtask(() => setState(() {}));
                   } else if (state is PermissionDeniedForever) {
                     // Suggest the user open settings to enable permission
                     ScaffoldMessenger.of(context).showSnackBar(
